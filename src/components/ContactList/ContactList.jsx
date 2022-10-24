@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { ButtonContact } from './ContactList.styled';
 import { useGetContactsQuery, useDeleteContactMutation } from '../../redux/contactsSliceApi';
@@ -25,7 +25,7 @@ export const ContactList = () => {
 
         {error && <p>{error.data}</p>}
 
-        {result.isLoading || isLoading && <Loader />}
+        {result.isLoading  || isLoading ? (<Loader />) : ''}
 
         {contacts && 
         filtredContacts().map(({name, phone, id}) => {
