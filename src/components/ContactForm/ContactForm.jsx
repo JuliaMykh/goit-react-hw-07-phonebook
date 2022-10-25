@@ -18,14 +18,15 @@ export const ContactForm = () => {
             ? Notify.failure(
                 `${name} is already in contacts.`,
             )
-            : addContact({ name, phone });
+            : addContact({ name, phone }) && resetForm();
         
-        resetForm();
+        
     };
 
     useEffect((name) => {
             if (result.isSuccess) {
                 Notify.success(`The ${name} has been added to your contact list.`);
+                
             };
         }, [result.isSuccess]);
     
