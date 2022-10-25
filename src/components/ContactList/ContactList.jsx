@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from 'react-redux';
 
 import { ItemContact } from './ContactList.styled';
-import { useGetContactsQuery, useDeleteContactMutation } from '../../redux/contactsSliceApi';
+import { useGetContactsQuery } from '../../redux/contactsSliceApi';
 import { ContactItem } from '../ContactItem/ContactItem';
 import { Loader } from '../Loader/Loader';
 
