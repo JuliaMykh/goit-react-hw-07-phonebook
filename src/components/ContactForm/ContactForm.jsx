@@ -1,29 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form, Field } from 'formik';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import {useGetContactsQuery, useAddContactMutation } from '../../redux/contactsSliceApi';
 import { LabelForm, SpanForm, ButtonForm } from './ContactForm.styled';
+import { Loader } from "components/Loader/Loader";
 
 export const ContactForm = () => {
 
-    const [addContact] = useAddContactMutation();
+    const [addContact, result] = useAddContactMutation();
+    // console.log(result);
     const { data: contacts } = useGetContactsQuery();
 
     const handleSubmit = ({ name, phone }, { resetForm }) => {
         // console.log({ name, phone });
-        contacts.some(contact => contact.name === name)
-        ? alert(
-        `${name} is already in contacts.`,
-        )
-        : addContact({ name, phone });
-        
-        Notify.success(`The ${name} has been added to your contact list.`);
+        contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase())
+            ? Notify.failure(
+                `${name} is already in contacts.`,
+            )
+            : addContact({ name, phone });
         
         resetForm();
     };
+
+    useEffect((name) => {
+            if (result.isSuccess) {
+                Notify.success(`The ${name} has been added to your contact list.`);
+            };
+        }, [result.isSuccess]);
     
     return (
+        <>
+        {result.isLoading && <Loader/>}
+
         <Formik
             initialValues={{ name: '', phone: '' }}
             onSubmit={handleSubmit}
@@ -49,10 +58,11 @@ export const ContactForm = () => {
                         required
                     />
                 </LabelForm>
-                <ButtonForm type="submit" >Add Contact</ButtonForm>
+                    <ButtonForm type="submit" disabled={result.isLoading} >Add Contact</ButtonForm>
             </Form>
-        </Formik>
-        
+            </Formik>
+            
+        </>
     );
 };
 
